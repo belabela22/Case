@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWM Summer Cases</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Welcome -->
+  <div id="welcomeScreen" class="screen active">
+    <h1>🌼 Welcome to SWM – Summer Edition Cases 🌼</h1>
+    <p>Open the case, study the report, and submit your diagnosis.</p>
+    <label for="nameInput">👤 Enter your name:</label>
+    <input type="text" id="nameInput" placeholder="Your Name" />
+    <button id="registerBtn">Register & Continue</button>
+  </div>
+
+  <!-- Case View -->
+  <div id="caseScreen" class="screen">
+    <h2 id="greeting"></h2>
+    <div class="folder">
+      <article class="letter">
+        <h3>📄 CASE FILE: Patient 0007</h3>
+        <p>17-year-old with dizziness, dry skin, light-headedness. Fever: 38.5°C. Possible dehydration.</p>
+      </article>
+      <article class="letter">
+        <h3>🧪 MEDICAL ANALYSIS</h3>
+        <p>Signs point to heat exhaustion. IV hydration recommended. Monitor closely.</p>
+      </article>
+    </div>
+
+    <form onsubmit="return handleSubmit()">
+      <label for="diagnosisInput">📝 Your Diagnosis:</label>
+      <textarea id="diagnosisInput" required></textarea>
+      <button type="submit" id="submitBtn">Submit</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
