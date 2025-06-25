@@ -1,0 +1,56 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: #FFFDF7;
+  color: #2E2E2E;
+  margin: 0;
+  padding: 1rem;
+}
+
+.screen {
+  display: none;
+  max-width: 800px;
+  margin: auto;
+}
+
+.screen.active {
+  display: block;
+}
+
+input, textarea, button {
+  font-family: inherit;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  font-size: 1rem;
+}
+
+button {
+  background: #4D7BA7;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3a5a7a;
+}
+
+.folder {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.letter {
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  flex: 1 1 45%;
+  border-radius: 6px;
+  min-width: 280px;
+}
+
+textarea {
+  min-height: 100px;
+}
