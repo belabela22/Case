@@ -1,4 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzo8hSeXuNCN0riz4Dk4dxyBsua7Zin_LMEinsHFR93LiPBeM1c0oJN8bcGloBwaVAsow/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw2kBjrH5fMjYpIfPQGlY8PDwZsUEROCiWYmlQKqWQwtURtT94R7lUWfc2E8a1gVQ2_Jw/exec';
 
 document.addEventListener("DOMContentLoaded", () => {
   const welcomeScreen = document.getElementById("welcomeScreen");
