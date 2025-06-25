@@ -1,18 +1,16 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwuT0wL2_swp4cRlccNVWfB5eulQtoSaOYcNwWgskAK_nyPNd55wL1DMBPkcT32fxAziw/exec';
-
 document.addEventListener("DOMContentLoaded", () => {
   const welcomeScreen = document.getElementById("welcomeScreen");
   const caseScreen = document.getElementById("caseScreen");
   const nameInput = document.getElementById("nameInput");
   const registerBtn = document.getElementById("registerBtn");
   const greeting = document.getElementById("greeting");
+  const nameHiddenInput = document.getElementById("nameHiddenInput");
   const diagnosisInput = document.getElementById("diagnosisInput");
   const submitBtn = document.getElementById("submitBtn");
 
   let userName = localStorage.getItem("swmName") || "";
   let hasSubmitted = localStorage.getItem("swmSubmitted") === "true";
 
-  // Already registered?
   if (userName) {
     showCaseScreen();
   }
@@ -34,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     welcomeScreen.classList.remove("active");
     caseScreen.classList.add("active");
     greeting.textContent = `👤 Welcome, ${userName}`;
+    nameHiddenInput.value = userName;
 
     if (hasSubmitted) {
       diagnosisInput.disabled = true;
@@ -42,47 +41,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.handleSubmit = function () {
+  window.handleFormspree = function (e) {
+    if (hasSubmitted) {
+      alert("You've already submitted your diagnosis.");
+      return false;
+    }
+
     const diagnosis = diagnosisInput.value.trim();
     if (!diagnosis || diagnosis.length < 3) {
-      alert("Please provide a longer diagnosis.");
+      alert("Please enter a longer diagnosis.");
       return false;
     }
 
-    if (hasSubmitted) {
-      alert("You've already submitted your response.");
-      return false;
-    }
-
-    const data = {
-      name: userName,
-      diagnosis: diagnosis
-    };
-
-    submitBtn.textContent = "Submitting...";
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(res => {
-      if (res.ok) {
-        localStorage.setItem("swmSubmitted", "true");
-        diagnosisInput.disabled = true;
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitted ✅";
-        alert("Diagnosis submitted successfully!");
-      } else {
-        throw new Error("Submission failed.");
-      }
-    })
-    .catch(err => {
-      alert("Error submitting diagnosis.");
-      console.error(err);
-    });
-
-    return false;
+    // Allow form to submit normally
+    localStorage.setItem("swmSubmitted", "true");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitted ✅";
+    return true; // allow native form submit
   };
 });
