@@ -3,41 +3,200 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SWM Summer Cases</title>
+  <title>SWM – Summer Edition Cases</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #FFFDF7;
+      color: #2E2E2E;
+      margin: 0;
+      padding: 1.5rem;
+    }
+
+    h1, h2 {
+      font-family: 'DM Serif Display', serif;
+      color: #4D7BA7;
+    }
+
+    .screen {
+      display: none;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    input, textarea, button {
+      font-family: inherit;
+      padding: 0.6rem;
+      margin-top: 0.6rem;
+      width: 100%;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #4D7BA7;
+      color: white;
+      border: none;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #3b5d86;
+    }
+
+    .folder {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .letter {
+      background: white;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      flex: 1 1 45%;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      min-width: 280px;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .folder {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Welcome -->
+
+  <!-- Welcome Page -->
   <div id="welcomeScreen" class="screen active">
     <h1>🌼 Welcome to SWM – Summer Edition Cases 🌼</h1>
-    <p>Open the case, study the report, and submit your diagnosis.</p>
-    <label for="nameInput">👤 Enter your name:</label>
+    <p>Here, you'll uncover daily cases from our hospital archives.<br>
+    Open the case, study the report and analysis, and submit your diagnosis.<br><br>Your insight matters.</p>
+
+    <label for="nameInput">👤 Please insert your name to begin:</label>
     <input type="text" id="nameInput" placeholder="Your Name" />
     <button id="registerBtn">Register & Continue</button>
   </div>
 
-  <!-- Case View -->
+  <!-- Case Page -->
   <div id="caseScreen" class="screen">
     <h2 id="greeting"></h2>
+
     <div class="folder">
       <article class="letter">
         <h3>📄 CASE FILE: Patient 0007</h3>
-        <p>17-year-old with dizziness, dry skin, light-headedness. Fever: 38.5°C. Possible dehydration.</p>
+        <p>
+          A 17-year-old was brought to the ER experiencing dizziness, dry mouth, and general fatigue.
+          Temperature measured at 38.5°C, with reports of fainting during sports activity. Vitals are stable,
+          but dehydration is suspected.
+        </p>
       </article>
       <article class="letter">
         <h3>🧪 MEDICAL ANALYSIS</h3>
-        <p>Signs point to heat exhaustion. IV hydration recommended. Monitor closely.</p>
+        <p>
+          Lab tests confirm mild dehydration. The patient should be monitored for signs of heat exhaustion.
+          IV fluids recommended. Additional testing may be needed to rule out underlying causes.
+        </p>
       </article>
     </div>
 
-    <form onsubmit="return handleSubmit()">
-      <label for="diagnosisInput">📝 Your Diagnosis:</label>
-      <textarea id="diagnosisInput" required></textarea>
+    <!-- Diagnosis Form -->
+    <form 
+      action="https://formspree.io/f/meokprez" 
+      method="POST"
+      onsubmit="return handleFormspree(event)">
+      <input type="hidden" name="name" id="nameHiddenInput" />
+
+      <label for="diagnosisInput">📝 Please write your opinion about your diagnosis:</label>
+      <textarea id="diagnosisInput" name="diagnosis" required></textarea>
       <button type="submit" id="submitBtn">Submit</button>
     </form>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const caseScreen = document.getElementById("caseScreen");
+      const nameInput = document.getElementById("nameInput");
+      const registerBtn = document.getElementById("registerBtn");
+      const greeting = document.getElementById("greeting");
+      const nameHiddenInput = document.getElementById("nameHiddenInput");
+      const diagnosisInput = document.getElementById("diagnosisInput");
+      const submitBtn = document.getElementById("submitBtn");
+
+      let userName = localStorage.getItem("swmName") || "";
+      let hasSubmitted = localStorage.getItem("swmSubmitted") === "true";
+
+      if (userName) {
+        showCaseScreen();
+      }
+
+      registerBtn.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        if (name.length < 2) {
+          alert("Please enter your name.");
+          return;
+        }
+        userName = name;
+        localStorage.setItem("swmName", userName);
+        localStorage.setItem("swmSubmitted", "false");
+        hasSubmitted = false;
+        showCaseScreen();
+      });
+
+      function showCaseScreen() {
+        welcomeScreen.classList.remove("active");
+        caseScreen.classList.add("active");
+        greeting.textContent = `👤 Welcome, ${userName}`;
+        nameHiddenInput.value = userName;
+
+        if (hasSubmitted) {
+          diagnosisInput.disabled = true;
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Already Submitted";
+        }
+      }
+
+      window.handleFormspree = function (e) {
+        if (hasSubmitted) {
+          alert("You've already submitted your diagnosis.");
+          return false;
+        }
+
+        const diagnosis = diagnosisInput.value.trim();
+        if (!diagnosis || diagnosis.length < 3) {
+          alert("Please write a proper diagnosis.");
+          return false;
+        }
+
+        localStorage.setItem("swmSubmitted", "true");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitted ✅";
+        return true;
+      };
+    });
+  </script>
+
 </body>
 </html>
